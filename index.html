@@ -1,916 +1,609 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional Portfolio & CMS</title>
-    
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
                     colors: {
-                        brand: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            500: '#3b82f6', // Professional Blue
-                            600: '#2563eb',
-                            900: '#0f172a', // Slate 900
-                        },
-                        darkBg: '#0f172a',
-                        darkCard: '#1e293b',
-                        darkBorder: '#334155'
+                        slate: {
+                            850: '#151e32',
+                            900: '#0f172a',
+                            950: '#090d16'
+                        }
                     }
                 }
             }
         }
     </script>
-
-    <style>
-        body {
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .dark .glass-nav {
-            background: rgba(15, 23, 42, 0.85);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .tab-content {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .tab-content.active {
-            display: block;
-            opacity: 1;
-            animation: fadeIn 0.4s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .admin-only {
-            display: none !important;
-        }
-        
-        .admin-mode-active .admin-only {
-            display: flex !important;
-        }
-        
-        .admin-mode-active .admin-only-block {
-            display: block !important;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
-    </style>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-darkBg dark:text-gray-100 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white">
+<body class="bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-300">
 
-    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <div class="w-10 h-10 rounded-xl bg-brand-900 dark:bg-white flex items-center justify-center text-white dark:text-brand-900 font-bold text-lg shadow-sm">
-                        <span id="nav-initials">--</span>
-                    </div>
-                    <span class="font-bold text-xl tracking-tight hidden sm:block" id="nav-name">Loading...</span>
-                </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-2" id="nav-links">
-                    <button onclick="switchTab('projects')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">Projects</button>
-                    <button onclick="switchTab('research')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">Research</button>
-                    <button onclick="switchTab('thoughts')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">Thoughts</button>
-                    <button onclick="switchTab('admin')" class="nav-btn admin-only hidden px-4 py-2 rounded-lg text-sm font-medium bg-brand-100 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 hover:bg-brand-200 transition-colors flex items-center gap-2">
-                        <i class="ph ph-shield-check"></i> CMS Dashboard
-                    </button>
-                </div>
-
-                <!-- Theme Toggle -->
-                <div class="flex items-center space-x-4">
-                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-darkCard text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors">
-                        <i class="ph ph-moon text-lg dark:hidden block"></i>
-                        <i class="ph ph-sun text-lg hidden dark:block"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Mobile Navigation -->
-        <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-darkCard border-t border-gray-200 dark:border-darkBorder pb-safe pt-2 px-4 flex justify-between z-50">
-            <button onclick="switchTab('projects')" class="mobile-nav-btn flex-1 flex flex-col items-center py-2 text-gray-500 hover:text-brand-600 transition-colors">
-                <i class="ph ph-briefcase text-xl mb-1"></i><span class="text-[10px] font-medium">Projects</span>
-            </button>
-            <button onclick="switchTab('research')" class="mobile-nav-btn flex-1 flex flex-col items-center py-2 text-gray-500 hover:text-brand-600 transition-colors">
-                <i class="ph ph-flask text-xl mb-1"></i><span class="text-[10px] font-medium">Research</span>
-            </button>
-            <button onclick="switchTab('thoughts')" class="mobile-nav-btn flex-1 flex flex-col items-center py-2 text-gray-500 hover:text-brand-600 transition-colors">
-                <i class="ph ph-chat-centered-text text-xl mb-1"></i><span class="text-[10px] font-medium">Thoughts</span>
-            </button>
-            <button onclick="switchTab('admin')" class="mobile-nav-btn admin-only hidden flex-1 flex flex-col items-center py-2 text-brand-600 transition-colors">
-                <i class="ph ph-shield-check text-xl mb-1"></i><span class="text-[10px] font-medium">Admin</span>
-            </button>
-        </div>
-    </nav>
-
-    <main class="flex-grow pt-24 pb-24 md:pb-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
-        
-        <header class="py-10 md:py-16 text-center md:text-left flex flex-col md:flex-row items-center gap-8 border-b border-gray-200 dark:border-darkBorder mb-12">
-            <div class="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
-                <img id="hero-image" src="https://placehold.co/400x400/1e293b/ffffff?text=User" alt="Profile" class="relative w-full h-full object-cover rounded-2xl border border-gray-200 dark:border-darkBorder shadow-lg">
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-gray-200 dark:border-slate-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span id="nav-initials" class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-500/20">JD</span>
+                <span id="nav-name" class="font-bold text-lg tracking-tight">Jane Doe</span>
             </div>
             
-            <div class="flex-1">
-                <div class="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-xs font-semibold tracking-wide">
-                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span id="hero-badge">Loading Status...</span>
+            <nav class="hidden md:flex items-center space-x-1">
+                <button onclick="switchTab('projects')" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50" data-tab="projects">Projects</button>
+                <button onclick="switchTab('research')" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" data-tab="research">Research</button>
+                <button onclick="switchTab('thoughts')" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" data-tab="thoughts">Thoughts</button>
+                <button onclick="switchTab('resume')" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" data-tab="resume">Resume</button>
+                <button id="admin-tab-btn" onclick="switchTab('admin')" class="tab-btn hidden px-4 py-2 rounded-lg text-sm font-medium transition-colors text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/30" data-tab="admin"><i class="fa-solid fa-gauge mr-1.5"></i> Dashboard</button>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl border border-gray-200 dark:border-slate-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+                    <i id="theme-icon" class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Subnav Bar -->
+    <div class="md:hidden flex justify-around bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 p-2">
+        <button onclick="switchTab('projects')" class="tab-btn text-xs px-3 py-1.5 rounded font-medium text-indigo-600 dark:text-indigo-400" data-tab="projects">Projects</button>
+        <button onclick="switchTab('research')" class="tab-btn text-xs px-3 py-1.5 rounded font-medium text-gray-600 dark:text-gray-400" data-tab="research">Research</button>
+        <button onclick="switchTab('thoughts')" class="tab-btn text-xs px-3 py-1.5 rounded font-medium text-gray-600 dark:text-gray-400" data-tab="thoughts">Thoughts</button>
+        <button onclick="switchTab('resume')" class="tab-btn text-xs px-3 py-1.5 rounded font-medium text-gray-600 dark:text-gray-400" data-tab="resume">Resume</button>
+        <button id="admin-mobile-btn" onclick="switchTab('admin')" class="tab-btn hidden text-xs px-3 py-1.5 rounded font-medium text-indigo-500" data-tab="admin">Admin</button>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 sm:px-6 py-8">
+        
+        <!-- PROFILE HERO HEADER -->
+        <section class="mb-12 flex flex-col md:flex-row items-start md:items-center gap-6 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm">
+            <div id="profile-avatar-container" class="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-3xl sm:text-4xl shadow-lg shadow-indigo-600/20 overflow-hidden flex-shrink-0">
+                <span id="hero-initials">JD</span>
+            </div>
+            <div class="flex-grow">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 text-xs font-semibold mb-3 border border-emerald-200 dark:border-emerald-900/50">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Open to Work
                 </div>
-                <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-gray-900 dark:text-white">
-                    <span id="hero-name">Loading Profile...</span>
-                </h1>
-                <p id="hero-headline" class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-6 font-light max-w-2xl">
-                    ...
-                </p>
-                <div class="flex flex-wrap items-center justify-center md:justify-start gap-4" id="social-links">
-                    <!-- Socials injected here -->
+                <h1 id="hero-name" class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">Jane Doe</h1>
+                <p id="hero-headline" class="text-lg text-gray-600 dark:text-gray-400 mb-4">Software Engineer & HCI Researcher crafting intelligent interfaces.</p>
+                <div id="hero-socials" class="flex items-center space-x-3">
+                    <a href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
             </div>
-        </header>
+        </section>
 
-        <!-- Projects Tab -->
-        <div id="tab-projects" class="tab-content active">
-            <div class="flex justify-between items-end mb-8">
-                <h2 class="text-2xl font-bold">Featured Work</h2>
+        <!-- TAB: PROJECTS -->
+        <div id="tab-projects" class="tab-content space-y-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold tracking-tight">Featured Work</h2>
             </div>
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="text-gray-500">Loading projects...</div>
+                <!-- Dynamically populated -->
             </div>
         </div>
 
-        <!-- Research Tab -->
-        <div id="tab-research" class="tab-content">
-            <h2 class="text-2xl font-bold mb-8">Publications & Research</h2>
-            <div class="space-y-6" id="research-list">
-                <div class="text-gray-500">Loading research...</div>
+        <!-- TAB: RESEARCH -->
+        <div id="tab-research" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold tracking-tight">Research Papers & Publications</h2>
+            </div>
+            <div id="research-list" class="space-y-4">
+                <!-- Dynamically populated -->
             </div>
         </div>
 
-        <!-- Thoughts Tab -->
-        <div id="tab-thoughts" class="tab-content">
-            <div class="max-w-2xl mx-auto">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold">Latest Thoughts</h2>
-                </div>
-                
-                <div class="space-y-8" id="thoughts-list">
-                    <div class="text-gray-500 text-center py-10">Loading thoughts...</div>
-                </div>
+        <!-- TAB: THOUGHTS -->
+        <div id="tab-thoughts" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold tracking-tight">Thoughts & Updates</h2>
+            </div>
+            <div id="thoughts-list" class="space-y-6">
+                <!-- Dynamically populated -->
             </div>
         </div>
 
-        <!-- Admin Dashboard Tab -->
-        <div id="tab-admin" class="tab-content">
-            <div class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-200 dark:border-darkBorder overflow-hidden flex flex-col md:flex-row min-h-[600px]">
-                
-                <!-- CMS Sidebar -->
-                <div class="w-full md:w-64 bg-gray-50 dark:bg-darkBg/50 border-r border-gray-200 dark:border-darkBorder p-4 flex flex-col gap-2">
-                    <div class="px-3 py-2 mb-4">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">CMS Menu</span>
+        <!-- TAB: RESUME -->
+        <div id="tab-resume" class="tab-content hidden space-y-8">
+            <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm space-y-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-slate-800 pb-6">
+                    <div>
+                        <h2 id="resume-name" class="text-2xl font-bold">Jane Doe</h2>
+                        <p id="resume-title" class="text-indigo-600 dark:text-indigo-400 font-medium">Software Engineer</p>
                     </div>
-                    <button onclick="switchAdminView('profile')" class="admin-menu-btn active w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-400">Profile Settings</button>
-                    <button onclick="switchAdminView('thoughts')" class="admin-menu-btn w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-darkBorder">Manage Thoughts</button>
-                    <button onclick="switchAdminView('projects')" class="admin-menu-btn w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-darkBorder">Manage Projects</button>
-                    
-                    <div class="mt-auto pt-4 border-t border-gray-200 dark:border-darkBorder">
-                        <button onclick="logoutAdmin()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors flex items-center gap-2">
-                            <i class="ph ph-sign-out"></i> Lock Dashboard
-                        </button>
+                    <div id="resume-contact" class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                        <div><i class="fa-solid fa-envelope mr-2 text-indigo-500"></i> jane.doe@example.com</div>
+                        <div><i class="fa-solid location mr-2 text-indigo-500"></i> San Francisco, CA</div>
                     </div>
                 </div>
 
-                <!-- CMS Content Area -->
-                <div class="flex-1 p-6 md:p-10 overflow-y-auto">
-                    
+                <div>
+                    <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-briefcase text-indigo-500"></i> Experience</h3>
+                    <div id="resume-experience" class="space-y-6">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-indigo-500"></i> Education</h3>
+                    <div id="resume-education" class="space-y-4">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-code text-indigo-500"></i> Core Skills</h3>
+                    <div id="resume-skills" class="flex flex-wrap gap-2">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: ADMIN DASHBOARD (GUI CMS) -->
+        <div id="tab-admin" class="tab-content hidden space-y-8">
+            <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-slate-800">
+                    <div>
+                        <h2 class="text-2xl font-bold">CMS Admin Dashboard</h2>
+                        <p class="text-sm text-gray-500">Manage your portfolio details, projects, research, and thoughts seamlessly.</p>
+                    </div>
+                    <button onclick="handleLogout()" class="px-4 py-2 bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 text-sm font-medium rounded-lg hover:bg-red-100 transition-colors">Log Out</button>
+                </div>
+
+                <!-- Admin Sections -->
+                <div class="space-y-8">
                     <!-- Profile Settings -->
-                    <div id="admin-view-profile" class="admin-view block">
-                        <h3 class="text-xl font-bold mb-6">Profile Settings</h3>
-                        <div class="space-y-5 max-w-xl">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
-                                    <input type="text" id="edit-fname" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-darkBg border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
-                                    <input type="text" id="edit-lname" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-darkBg border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none">
-                                </div>
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-indigo-500"><i class="fa-solid fa-user-pen mr-2"></i> Profile Details</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Full Name</label>
+                                <input type="text" id="admin-name" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Headline / Bio</label>
-                                <textarea id="edit-headline" rows="3" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-darkBg border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Initials</label>
+                                <input type="text" id="admin-initials" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Headline Bio</label>
+                                <input type="text" id="admin-headline" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status Badge Text</label>
-                                <input type="text" id="edit-status" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-darkBg border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none">
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">GitHub URL</label>
+                                <input type="text" id="admin-github" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Profile Image URL</label>
-                                <input type="text" id="edit-image" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-darkBg border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none">
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">LinkedIn URL</label>
+                                <input type="text" id="admin-linkedin" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                             </div>
-                            <button onclick="saveProfileData()" class="mt-4 px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2">
-                                <i class="ph ph-floppy-disk"></i> Save Profile
-                            </button>
-                            <p id="profile-save-status" class="text-sm text-green-600 dark:text-green-400 hidden mt-2">Changes saved to cloud successfully!</p>
                         </div>
                     </div>
 
-                    <!-- Manage Thoughts -->
-                    <div id="admin-view-thoughts" class="admin-view hidden">
-                        <h3 class="text-xl font-bold mb-6">Post a New Thought</h3>
-                        
-                        <div class="bg-gray-50 dark:bg-darkBg p-5 rounded-xl border border-gray-200 dark:border-darkBorder mb-10">
-                            <textarea id="new-thought-text" rows="3" placeholder="What's on your mind? (Supports markdown)" class="w-full px-4 py-3 rounded-lg bg-white dark:bg-darkCard border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none mb-4 resize-none"></textarea>
-                            <div class="flex flex-col sm:flex-row gap-3">
-                                <input type="text" id="new-thought-media" placeholder="Optional Image URL" class="flex-1 px-4 py-2 rounded-lg bg-white dark:bg-darkCard border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none text-sm">
-                                <button onclick="postNewThought()" class="px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap">
-                                    Publish Thought
-                                </button>
-                            </div>
+                    <!-- Add Project Form -->
+                    <div class="border-t border-gray-200 dark:border-slate-800 pt-6 space-y-4">
+                        <h3 class="text-lg font-semibold text-indigo-500"><i class="fa-solid fa-diagram-project mr-2"></i> Add New Project</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" id="proj-title" placeholder="Project Title" class="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                            <input type="text" id="proj-tags" placeholder="Tags (comma separated, e.g. React, Node)" class="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                            <textarea id="proj-desc" placeholder="Project Description" rows="2" class="sm:col-span-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                            <input type="text" id="proj-link" placeholder="Project URL or GitHub Link" class="sm:col-span-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
                         </div>
-
-                        <h3 class="text-lg font-bold mb-4 border-b border-gray-200 dark:border-darkBorder pb-2">Previous Thoughts</h3>
-                        <div id="admin-thoughts-list" class="space-y-4">
-                            <!-- Injected via JS -->
-                        </div>
+                        <button onclick="addProject()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-lg transition-colors shadow-sm"><i class="fa-solid fa-plus mr-1"></i> Add Project</button>
                     </div>
 
-                    <!-- Manage Projects -->
-                    <div id="admin-view-projects" class="admin-view hidden">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-bold">Manage Projects</h3>
-                            <button onclick="toggleNewProjectForm()" class="px-4 py-2 bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400 font-medium rounded-lg hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors text-sm">
-                                + Add Project
-                            </button>
+                    <!-- Add Research Form -->
+                    <div class="border-t border-gray-200 dark:border-slate-800 pt-6 space-y-4">
+                        <h3 class="text-lg font-semibold text-indigo-500"><i class="fa-solid fa-book-open mr-2"></i> Add Research Paper</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" id="res-title" placeholder="Paper Title" class="sm:col-span-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                            <input type="text" id="res-venue" placeholder="Publication Venue / Journal" class="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                            <input type="text" id="res-date" placeholder="Year / Date" class="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                            <textarea id="res-abstract" placeholder="Abstract / Summary" rows="2" class="sm:col-span-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                            <input type="text" id="res-link" placeholder="Paper Link / DOI URL" class="sm:col-span-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
                         </div>
-                        
-                        <!-- New Project Form (Hidden by default) -->
-                        <div id="new-project-form" class="hidden bg-gray-50 dark:bg-darkBg p-6 rounded-xl border border-gray-200 dark:border-darkBorder mb-8 space-y-4">
-                            <h4 class="font-semibold text-gray-900 dark:text-white">Create New Project</h4>
-                            <input type="text" id="proj-title" placeholder="Project Title" class="w-full px-4 py-2 rounded-lg bg-white dark:bg-darkCard border border-gray-200 dark:border-darkBorder outline-none">
-                            <textarea id="proj-desc" rows="2" placeholder="Short description" class="w-full px-4 py-2 rounded-lg bg-white dark:bg-darkCard border border-gray-200 dark:border-darkBorder outline-none"></textarea>
-                            <input type="text" id="proj-img" placeholder="Image URL (e.g. https://placehold.co/800x600)" class="w-full px-4 py-2 rounded-lg bg-white dark:bg-darkCard border border-gray-200 dark:border-darkBorder outline-none">
-                            <input type="text" id="proj-link" placeholder="Live Link (Optional)" class="w-full px-4 py-2 rounded-lg bg-white dark:bg-darkCard border border-gray-200 dark:border-darkBorder outline-none">
-                            <input type="text" id="proj-tags" placeholder="Tags (comma separated, e.g. React, Node, AI)" class="w-full px-4 py-2 rounded-lg bg-white dark:bg-darkCard border border-gray-200 dark:border-darkBorder outline-none">
-                            <div class="flex gap-2 pt-2">
-                                <button onclick="saveNewProject()" class="px-5 py-2 bg-brand-600 text-white rounded-lg text-sm font-medium hover:bg-brand-700">Save Project</button>
-                                <button onclick="toggleNewProjectForm()" class="px-5 py-2 bg-gray-200 dark:bg-darkCard text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium">Cancel</button>
-                            </div>
-                        </div>
-
-                        <div id="admin-projects-list" class="grid grid-cols-1 gap-4">
-                            <!-- Injected via JS -->
-                        </div>
+                        <button onclick="addResearch()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-lg transition-colors shadow-sm"><i class="fa-solid fa-plus mr-1"></i> Publish Paper</button>
                     </div>
 
+                    <!-- Post Thought Form -->
+                    <div class="border-t border-gray-200 dark:border-slate-800 pt-6 space-y-4">
+                        <h3 class="text-lg font-semibold text-indigo-500"><i class="fa-solid fa-feather mr-2"></i> Post Thought / Article</h3>
+                        <div class="space-y-4">
+                            <input type="text" id="thought-title" placeholder="Thought Title" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                            <textarea id="thought-content" placeholder="Write your thoughts, share photos, or paste image/video URLs here..." rows="4" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                            <input type="text" id="thought-media" placeholder="Optional Photo/Video Media URL (e.g., https://images.unsplash.com/...)" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <button onclick="addThought()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-lg transition-colors shadow-sm"><i class="fa-solid fa-paper-plane mr-1"></i> Broadcast Thought</button>
+                    </div>
+
+                    <!-- Global Save Button -->
+                    <div class="border-t border-gray-200 dark:border-slate-800 pt-6 flex justify-end">
+                        <button onclick="saveAllChanges()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition-all shadow-md flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Save & Sync All Changes to Cloud</button>
+                    </div>
                 </div>
             </div>
         </div>
+
     </main>
 
     <!-- Footer -->
-    <footer class="mt-auto border-t border-gray-200 dark:border-darkBorder bg-white/50 dark:bg-darkBg/50 backdrop-blur-md">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-gray-500 text-sm">
-                © <span id="current-year"></span> <span id="footer-name"></span>. Portfolio built with CMS.
-            </p>
-            <button onclick="openLoginModal()" class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors p-2" title="Admin Access">
-                <i class="ph ph-lock-key"></i>
-            </button>
+    <footer class="mt-auto border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-sm text-gray-500">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; <span id="footer-year">2026</span> <span id="footer-name">Jane Doe</span>. All rights reserved.</p>
+            <button onclick="openLoginModal()" class="text-gray-400 hover:text-indigo-500 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-lock text-xs"></i> Admin CMS</button>
         </div>
     </footer>
 
-    <!-- Admin Login Modal -->
-    <div id="login-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-darkCard w-full max-w-md rounded-2xl shadow-2xl p-8 border border-gray-200 dark:border-darkBorder transform transition-all translate-y-4 scale-95" id="login-modal-content">
-            <div class="flex justify-between items-center mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-lg">
-                        <i class="ph ph-shield-check text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Admin Authentication</h3>
-                </div>
-                <button onclick="closeLoginModal()" class="text-gray-400 hover:text-gray-700 dark:hover:text-white">
-                    <i class="ph ph-x text-lg"></i>
-                </button>
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 max-w-sm w-full mx-4 shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold">Admin Authentication</h3>
+                <button onclick="closeLoginModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Enter the passphrase to unlock the Content Management System. (Hint: password is <strong>admin</strong>)</p>
-            
-            <div class="space-y-4">
-                <input type="password" id="admin-password" placeholder="Enter passphrase..." class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-darkBg border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none text-gray-900 dark:text-white" onkeyup="if(event.key === 'Enter') attemptLogin()">
-                
-                <div id="login-error" class="hidden text-red-500 text-sm font-medium p-3 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/30">
-                    Incorrect passphrase.
-                </div>
-                
-                <button onclick="attemptLogin()" class="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium transition-colors hover:bg-gray-800 dark:hover:bg-gray-200">
-                    Unlock Dashboard
-                </button>
+            <p class="text-xs text-gray-500 mb-4">Enter your passphrase to access the content management system.</p>
+            <input type="password" id="login-password-input" placeholder="Passphrase" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm mb-4 focus:outline-none focus:border-indigo-500">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeLoginModal()" class="px-4 py-2 bg-gray-100 dark:bg-slate-800 text-sm rounded-lg font-medium">Cancel</button>
+                <button onclick="verifyLogin()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg font-medium">Unlock</button>
             </div>
         </div>
     </div>
 
-    <!-- 
-    ========================================================================
-    APPLICATION LOGIC & CLOUD FIRESTORE INTEGRATION
-    ======================================================================== 
-    -->
+    <!-- Firebase & Portfolio App Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Environment Variables safely accessed via window object
-const appId = 'my-portfolio';
-const firebaseConfig = {
-  apiKey: "AIzaSyCTBIjFS-8mz9-3sSSZExcnuUDQbilIMdI",
-  authDomain: "my-portfolio-db-e9b26.firebaseapp.com",
-  projectId: "my-portfolio-db-e9b26",
-  storageBucket: "my-portfolio-db-e9b26.firebasestorage.app",
-  messagingSenderId: "353504796003",
-  appId: "1:353504796003:web:3a0b5ad743d0a7d0230756"
-};
-                // Initialize Firebase
+        // Real Firebase Configuration
+        const appId = 'my-portfolio';
+        const firebaseConfig = {
+            apiKey: "AIzaSyCTBIjFS-8mz9-3sSSZExcnuUDQbilIMdI",
+            authDomain: "my-portfolio-db-e9b26.firebaseapp.com",
+            projectId: "my-portfolio-db-e9b26",
+            storageBucket: "my-portfolio-db-e9b26.firebasestorage.app",
+            messagingSenderId: "353504796003",
+            appId: "1:353504796003:web:3a0b5ad743d0a7d0230756"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        
-        // App State
-        let currentUser = null;
-        let isAdmin = false;
-        let unsubscribeSnapshot = null;
 
-        // Default Data Structure (used if cloud document is empty)
+        let isAdmin = false;
+        const correctPassword = 'admin';
+
+        // Default Data Structure
         let PORTFOLIO_DATA = {
             profile: {
                 firstName: "Jane",
                 lastName: "Doe",
                 initials: "JD",
                 headline: "Software Engineer & HCI Researcher crafting intelligent interfaces.",
-                statusBadge: "Open to Work",
-                image: "https://placehold.co/400x400/2563eb/ffffff?text=JD",
+                github: "https://github.com",
+                linkedin: "https://linkedin.com",
+                email: "jane.doe@example.com",
+                location: "San Francisco, CA"
             },
-            socials: [
-                { icon: "ph-github-logo", url: "https://github.com" },
-                { icon: "ph-linkedin-logo", url: "https://linkedin.com" }
-            ],
             projects: [
                 {
-                    id: "proj-1",
-                    title: "Echo Flow Analytics",
-                    description: "A real-time data visualization dashboard processing millions of events per second.",
-                    image: "https://placehold.co/800x500/0f172a/ffffff?text=Analytics+Dashboard",
-                    link: "#",
-                    tags: ["React", "TypeScript", "D3.js"]
+                    title: "Analytics Dashboard",
+                    description: "A real-time data visualization suite built with modern web components and optimized UI performance.",
+                    tags: ["React", "Tailwind", "Firebase"],
+                    link: "#"
                 }
             ],
             research: [
                 {
-                    id: "res-1",
-                    title: "Optimizing State Management in Large scale SPAs",
-                    conference: "WebDev Journal 2025",
-                    description: "An analysis of component render cycles and memory leaks in monolithic frontend applications."
+                    title: "Human-Centered Design Patterns in Autonomous Agents",
+                    venue: "ACM CHI Conference",
+                    date: "2025",
+                    abstract: "Investigating ergonomic interaction models for complex multi-agent system handoffs.",
+                    link: "#"
                 }
             ],
             thoughts: [
                 {
-                    id: "thought-1",
-                    date: "Oct 24, 2026",
-                    content: "Just migrated my entire portfolio to a custom CMS built on Firebase. The control feels amazing compared to static generators. 🚀",
-                    mediaUrl: ""
+                    id: 1,
+                    title: "The Shift Toward Modular Interfaces",
+                    content: "Component architectures are evolving past traditional framework boundaries. Here is why lightweight client state is becoming paramount.",
+                    media: "",
+                    date: "May 12, 2026",
+                    replies: []
                 }
             ],
-            comments: []
+            resume: {
+                experience: [
+                    { role: "Senior Software Engineer", company: "TechCorp", period: "2023 - Present", description: "Leading frontend infrastructure and design systems." }
+                ],
+                education: [
+                    { degree: "B.S. in Computer Science", institution: "Stanford University", period: "2019 - 2023" }
+                ],
+                skills: ["JavaScript", "TypeScript", "React", "Node.js", "UI/UX Architecture"]
+            }
         };
 
-        async function initAuth() {
-            // 1. Listen for auth state securely
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUser = user;
-                    listenToCloudData();
-                }
+        // Authenticate Anonymously with Firebase
+        signInAnonymously(auth).catch((error) => console.error("Auth error:", error));
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // FIXED PATH: Strict 4-segment compliant cloud doc path
+                const docRef = doc(db, 'artifacts', appId, 'data', 'appState');
+                onSnapshot(docRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const cloudData = docSnap.data();
+                        if (cloudData && cloudData.payload) {
+                            PORTFOLIO_DATA = cloudData.payload;
+                            renderAll();
+                        }
+                    } else {
+                        // Initialize remote doc if missing
+                        setDoc(docRef, { payload: PORTFOLIO_DATA }).catch(err => console.log("Init sync note:", err));
+                    }
+                }, (error) => {
+                    console.log("Snapshot listener warning, falling back locally:", error);
+                });
+            }
+        });
+
+        window.renderAll = function() {
+            const p = PORTFOLIO_DATA.profile;
+            document.getElementById('nav-name').innerText = `${p.firstName} ${p.lastName}`;
+            document.getElementById('nav-initials').innerText = p.initials;
+            document.getElementById('hero-name').innerText = `${p.firstName} ${p.lastName}`;
+            document.getElementById('hero-initials').innerText = p.initials;
+            document.getElementById('hero-headline').innerText = p.headline;
+            document.getElementById('footer-name').innerText = `${p.firstName} ${p.lastName}`;
+            
+            // Render Projects
+            const projContainer = document.getElementById('projects-grid');
+            projContainer.innerHTML = PORTFOLIO_DATA.projects.map(proj => `
+                <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">${proj.title}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">${proj.description}</p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            ${proj.tags.map(t => `<span class="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 text-xs rounded-md font-medium">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                    <a href="${proj.link}" target="_blank" class="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">View Project <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i></a>
+                </div>
+            `).join('');
+
+            // Render Research
+            const resContainer = document.getElementById('research-list');
+            resContainer.innerHTML = PORTFOLIO_DATA.research.map(res => `
+                <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <h3 class="text-lg font-bold">${res.title}</h3>
+                        <span class="px-3 py-1 bg-gray-100 dark:bg-slate-800 text-xs font-semibold rounded-full w-fit">${res.venue} (${res.date})</span>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${res.abstract}</p>
+                    <a href="${res.link}" target="_blank" class="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Read Paper <i class="fa-solid fa-file-pdf ml-1.5"></i></a>
+                </div>
+            `).join('');
+
+            // Render Thoughts
+            const thoughtContainer = document.getElementById('thoughts-list');
+            thoughtContainer.innerHTML = PORTFOLIO_DATA.thoughts.map(th => `
+                <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between text-xs text-gray-400">
+                        <span><i class="fa-regular fa-calendar mr-1"></i> ${th.date}</span>
+                    </div>
+                    <h3 class="text-xl font-bold">${th.title}</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">${th.content}</p>
+                    ${th.media ? `<div class="rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800 max-h-96"><img src="${th.media}" class="w-full h-full object-cover"></div>` : ''}
+                    
+                    <!-- Comments / Replies section -->
+                    <div class="border-t border-gray-100 dark:border-slate-800 pt-4 mt-4 space-y-3">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Discussion (${th.replies ? th.replies.length : 0})</h4>
+                        <div class="space-y-2">
+                            ${(th.replies || []).map(r => `
+                                <div class="bg-gray-50 dark:bg-slate-800/50 p-3 rounded-xl text-xs space-y-1">
+                                    <div class="font-semibold text-indigo-500">${r.author}</div>
+                                    <div class="text-gray-600 dark:text-gray-300">${r.text}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="flex gap-2 mt-2">
+                            <input type="text" id="reply-input-${th.id}" placeholder="Leave a public comment..." class="flex-grow bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-500">
+                            <button onclick="postReply(${th.id})" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Resume Info
+            document.getElementById('resume-name').innerText = `${p.firstName} ${p.lastName}`;
+            document.getElementById('resume-title').innerText = p.headline.split('&')[0];
+            document.getElementById('resume-experience').innerHTML = PORTFOLIO_DATA.resume.experience.map(exp => `
+                <div class="border-l-2 border-indigo-500 pl-4 space-y-1">
+                    <div class="font-bold text-base">${exp.role} <span class="text-xs font-normal text-gray-400">@ ${exp.company}</span></div>
+                    <div class="text-xs text-indigo-500 font-medium">${exp.period}</div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${exp.description}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('resume-education').innerHTML = PORTFOLIO_DATA.resume.education.map(edu => `
+                <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-4 space-y-1">
+                    <div class="font-bold text-base">${edu.degree}</div>
+                    <div class="text-xs text-indigo-500 font-medium">${edu.institution} (${edu.period})</div>
+                </div>
+            `).join('');
+
+            document.getElementById('resume-skills').innerHTML = PORTFOLIO_DATA.resume.skills.map(skill => `
+                <span class="px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium">${skill}</span>
+            `).join('');
+        };
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-indigo-600', 'dark:text-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-950/50');
+                btn.classList.add('text-gray-600', 'dark:text-gray-400');
+            });
+            document.querySelectorAll(`[data-tab="${tabName}"]`).forEach(btn => {
+                btn.classList.add('text-indigo-600', 'dark:text-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-950/50');
+                btn.classList.remove('text-gray-600', 'dark:text-gray-400');
             });
 
-            // 2. Attempt authentication using injected platform token
-            try {
-                if (initialToken) {
-                    await signInWithCustomToken(auth, initialToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                // Try loading from local storage before rendering fallback
-                const localData = localStorage.getItem('portfolio_backup');
-                if (localData) PORTFOLIO_DATA = JSON.parse(localData);
-                renderPublicView(); 
+            if(tabName === 'admin' && !isAdmin) {
+                openLoginModal();
+                switchTab('projects');
             }
-        }
+        };
 
-        // Listen for core portfolio configuration changes
-        function listenToCloudData() {
-            if (!currentUser) return;
-            
-            // Prevent duplicate active listeners
-            if (unsubscribeSnapshot) unsubscribeSnapshot();
-            
-            const docRef = doc(db, 'artifacts', appId, 'data', 'appState');
-            
-            try {
-                unsubscribeSnapshot = onSnapshot(docRef, (snapshot) => {
-                    if (snapshot.exists()) {
-                        PORTFOLIO_DATA = snapshot.data();
-                        if (!PORTFOLIO_DATA.comments) {
-                            PORTFOLIO_DATA.comments = [];
-                        }
-                        // Sync cloud data to local storage for backup
-                        localStorage.setItem('portfolio_backup', JSON.stringify(PORTFOLIO_DATA));
-                    } else {
-                        // First time load - save defaults to cloud
-                        saveEntirePortfolio();
-                    }
-                    renderPublicView();
-                    if(isAdmin) populateAdminForms();
-                }, (error) => {
-                    // FALLBACK: If cloud database permissions are restricted, 
-                    // silently intercept the error and use local storage instead.
-                    const localData = localStorage.getItem('portfolio_backup');
-                    if (localData) {
-                        PORTFOLIO_DATA = JSON.parse(localData);
-                    }
-                    renderPublicView(); 
-                    if(isAdmin) populateAdminForms();
-                });
-            } catch(e) {
-                renderPublicView();
-            }
-        }
+        window.toggleDarkMode = function() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            document.getElementById('theme-icon').className = isDark ? "fa-solid fa-moon" : "fa-solid fa-sun";
+        };
 
-        // Core Save Function
-        async function saveEntirePortfolio() {
-            // Always save locally as a reliable fallback
-            localStorage.setItem('portfolio_backup', JSON.stringify(PORTFOLIO_DATA));
-            
-            if (!currentUser || !isAdmin) return true;
-            
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'data', 'appState');
-                await setDoc(docRef, PORTFOLIO_DATA);
-                return true;
-            } catch (error) {
-                // Silently succeed so the UI updates with local storage data
-                return true; 
-            }
-        }
-
-        function renderPublicView() {
-            const p = PORTFOLIO_DATA;
-            
-            // Header / Profile
-            document.getElementById('nav-initials').textContent = p.profile.initials || "JD";
-            document.getElementById('nav-name').textContent = `${p.profile.firstName} ${p.profile.lastName}`;
-            document.getElementById('footer-name').textContent = `${p.profile.firstName} ${p.profile.lastName}`;
-            document.getElementById('hero-name').textContent = `${p.profile.firstName} ${p.profile.lastName}`;
-            document.getElementById('hero-headline').textContent = p.profile.headline;
-            document.getElementById('hero-badge').textContent = p.profile.statusBadge;
-            document.getElementById('hero-image').src = p.profile.image;
-
-            // Socials
-            const socialsEl = document.getElementById('social-links');
-            socialsEl.innerHTML = p.socials.map(s => 
-                `<a href="${s.url}" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-darkCard border border-gray-200 dark:border-darkBorder text-gray-600 dark:text-gray-300 hover:text-brand-600 hover:border-brand-500 shadow-sm transition-all hover:scale-105"><i class="ph ${s.icon} text-xl"></i></a>`
-            ).join('');
-
-            // Projects
-            const projectsEl = document.getElementById('projects-grid');
-            if(p.projects.length === 0) {
-                projectsEl.innerHTML = `<div class="text-gray-500">No projects added yet.</div>`;
-            } else {
-                projectsEl.innerHTML = p.projects.map(proj => `
-                    <div class="group flex flex-col bg-white dark:bg-darkCard rounded-2xl overflow-hidden border border-gray-200 dark:border-darkBorder hover:border-gray-300 dark:hover:border-gray-600 transition-all shadow-sm hover:shadow-md">
-                        <div class="h-48 overflow-hidden bg-gray-100 dark:bg-gray-800 relative">
-                            ${proj.image ? `<img src="${proj.image}" alt="${proj.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">` : ''}
-                        </div>
-                        <div class="p-6 flex-grow flex flex-col">
-                            <h3 class="text-lg font-bold mb-2">${proj.title}</h3>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 flex-grow">${proj.description}</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                ${proj.tags ? proj.tags.map(t => `<span class="px-2 py-1 text-xs rounded-md bg-gray-100 dark:bg-darkBg text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-darkBorder">${t.trim()}</span>`).join('') : ''}
-                            </div>
-                            ${proj.link ? `<a href="${proj.link}" target="_blank" class="text-brand-600 dark:text-brand-400 text-sm font-medium flex items-center gap-1 hover:underline">View Project <i class="ph ph-arrow-right"></i></a>` : ''}
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Research
-            const researchEl = document.getElementById('research-list');
-            if(p.research.length === 0) {
-                researchEl.innerHTML = `<div class="text-gray-500">No research added yet.</div>`;
-            } else {
-                researchEl.innerHTML = p.research.map(res => `
-                    <div class="p-6 bg-white dark:bg-darkCard rounded-2xl border border-gray-200 dark:border-darkBorder shadow-sm">
-                        <div class="text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider mb-2">${res.conference}</div>
-                        <h3 class="text-lg font-bold mb-2">${res.title}</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">${res.description}</p>
-                    </div>
-                `).join('');
-            }
-
-            // Call renderThoughts to process thoughts and their comments
-            renderThoughts();
-        }
-
-        function renderThoughts() {
-            const thoughtsEl = document.getElementById('thoughts-list');
-            const p = PORTFOLIO_DATA;
-
-            if(p.thoughts.length === 0) {
-                thoughtsEl.innerHTML = `<div class="text-gray-500 text-center py-10">No thoughts posted yet.</div>`;
+        window.openLoginModal = function() {
+            if(isAdmin) {
+                switchTab('admin');
                 return;
             }
-
-            // Reverse to show newest thoughts first
-            const sortedThoughts = [...p.thoughts].reverse();
-
-            thoughtsEl.innerHTML = sortedThoughts.map(thought => {
-                
-                // Filter comments for this specific thought
-                const allComments = PORTFOLIO_DATA.comments || [];
-                const thoughtComments = allComments
-                    .filter(c => c.thoughtId === thought.id)
-                    .sort((a, b) => a.timestamp - b.timestamp);
-                
-                const commentsHtml = thoughtComments.map(c => `
-                    <div class="flex gap-3 mb-3">
-                        <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center text-gray-500 dark:text-gray-400 text-xs font-bold">
-                            ${c.authorName.charAt(0).toUpperCase()}
-                        </div>
-                        <div class="flex-1 bg-gray-50 dark:bg-darkBg p-3 rounded-2xl rounded-tl-none border border-gray-100 dark:border-darkBorder/50">
-                            <div class="flex items-baseline gap-2 mb-1">
-                                <span class="font-semibold text-sm">${c.authorName}</span>
-                                <span class="text-xs text-gray-400">${new Date(c.timestamp).toLocaleDateString()}</span>
-                            </div>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">${c.text}</p>
-                        </div>
-                    </div>
-                `).join('');
-
-                return `
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-gray-200 dark:border-darkBorder shadow-sm">
-                        <!-- Thought Header -->
-                        <div class="flex items-center gap-3 mb-4">
-                            <img src="${p.profile.image}" class="w-10 h-10 rounded-full border border-gray-200 dark:border-darkBorder object-cover">
-                            <div>
-                                <h4 class="font-bold text-sm">${p.profile.firstName} ${p.profile.lastName}</h4>
-                                <p class="text-xs text-gray-500">${thought.date}</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Thought Content -->
-                        <p class="text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed mb-4">${thought.content}</p>
-                        ${thought.mediaUrl ? `<img src="${thought.mediaUrl}" class="rounded-xl w-full max-h-96 object-cover mb-4 border border-gray-100 dark:border-darkBorder">` : ''}
-                        
-                        <!-- Comments Section -->
-                        <div class="mt-6 pt-4 border-t border-gray-100 dark:border-darkBorder/50">
-                            <h5 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-                                <i class="ph ph-chats"></i> Replies (${thoughtComments.length})
-                            </h5>
-                            
-                            <div class="mb-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
-                                ${commentsHtml || '<p class="text-sm text-gray-400 italic">No replies yet. Be the first!</p>'}
-                            </div>
-                            
-                            <!-- Reply Input -->
-                            <div class="flex gap-2">
-                                <input type="text" id="reply-input-${thought.id}" placeholder="Write a reply..." class="flex-1 px-4 py-2 rounded-full bg-gray-50 dark:bg-darkBg border border-gray-200 dark:border-darkBorder focus:ring-2 focus:ring-brand-500 outline-none text-sm" onkeyup="if(event.key === 'Enter') submitComment('${thought.id}')">
-                                <button onclick="submitComment('${thought.id}')" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-colors">
-                                    <i class="ph ph-paper-plane-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.submitComment = async function(thoughtId) {
-            const input = document.getElementById(`reply-input-${thoughtId}`);
-            const text = input.value.trim();
-            
-            if (!text) return;
-            
-            // Temporary disable input
-            input.disabled = true;
-            
-            try {
-                const newComment = {
-                    thoughtId: thoughtId,
-                    text: text,
-                    authorName: "Guest", // Anonymous guests
-                    timestamp: Date.now()
-                };
-                
-                if (!PORTFOLIO_DATA.comments) {
-                    PORTFOLIO_DATA.comments = [];
-                }
-                PORTFOLIO_DATA.comments.push(newComment);
-                
-                await saveEntirePortfolio();
-                
-                input.value = '';
-                renderThoughts(); // Update UI locally immediately
-            } catch (error) {
-                console.warn("Error posting comment", error);
-            } finally {
-                input.disabled = false;
-            }
-        };
-
-        function populateAdminForms() {
-            const p = PORTFOLIO_DATA;
-            // Profile Form
-            document.getElementById('edit-fname').value = p.profile.firstName || '';
-            document.getElementById('edit-lname').value = p.profile.lastName || '';
-            document.getElementById('edit-headline').value = p.profile.headline || '';
-            document.getElementById('edit-status').value = p.profile.statusBadge || '';
-            document.getElementById('edit-image').value = p.profile.image || '';
-
-            // Thoughts List in Admin
-            const thoughtsList = document.getElementById('admin-thoughts-list');
-            thoughtsList.innerHTML = [...p.thoughts].reverse().map(t => `
-                <div class="flex justify-between items-start bg-white dark:bg-darkCard p-4 rounded-lg border border-gray-200 dark:border-darkBorder">
-                    <div>
-                        <div class="text-xs text-gray-500 mb-1">${t.date}</div>
-                        <p class="text-sm line-clamp-2">${t.content}</p>
-                    </div>
-                    <button onclick="deleteAdminThought('${t.id}')" class="text-red-500 hover:text-red-700 p-2"><i class="ph ph-trash"></i></button>
-                </div>
-            `).join('');
-
-            // Projects List in Admin
-            const projList = document.getElementById('admin-projects-list');
-            projList.innerHTML = p.projects.map(proj => `
-                <div class="flex justify-between items-center bg-white dark:bg-darkCard p-4 rounded-lg border border-gray-200 dark:border-darkBorder">
-                    <div class="flex items-center gap-4">
-                        ${proj.image ? `<img src="${proj.image}" class="w-12 h-12 rounded object-cover">` : '<div class="w-12 h-12 rounded bg-gray-100 dark:bg-gray-800"></div>'}
-                        <h4 class="font-bold text-sm">${proj.title}</h4>
-                    </div>
-                    <button onclick="deleteAdminProject('${proj.id}')" class="text-red-500 hover:text-red-700 p-2"><i class="ph ph-trash"></i></button>
-                </div>
-            `).join('');
-        }
-
-        window.saveProfileData = async function() {
-            PORTFOLIO_DATA.profile.firstName = document.getElementById('edit-fname').value;
-            PORTFOLIO_DATA.profile.lastName = document.getElementById('edit-lname').value;
-            PORTFOLIO_DATA.profile.headline = document.getElementById('edit-headline').value;
-            PORTFOLIO_DATA.profile.statusBadge = document.getElementById('edit-status').value;
-            PORTFOLIO_DATA.profile.image = document.getElementById('edit-image').value;
-            
-            // Auto generate initials
-            const fn = PORTFOLIO_DATA.profile.firstName.charAt(0).toUpperCase();
-            const ln = PORTFOLIO_DATA.profile.lastName.charAt(0).toUpperCase();
-            PORTFOLIO_DATA.profile.initials = fn + ln;
-
-            const success = await saveEntirePortfolio();
-            if(success) {
-                const status = document.getElementById('profile-save-status');
-                status.classList.remove('hidden');
-                setTimeout(() => status.classList.add('hidden'), 3000);
-            }
-        };
-
-        window.postNewThought = async function() {
-            const contentEl = document.getElementById('new-thought-text');
-            const mediaEl = document.getElementById('new-thought-media');
-            const content = contentEl.value.trim();
-            
-            if(!content) return alert('Thought cannot be empty');
-
-            const newThought = {
-                id: 'thought-' + Date.now(),
-                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-                content: content,
-                mediaUrl: mediaEl.value.trim()
-            };
-
-            PORTFOLIO_DATA.thoughts.push(newThought);
-            
-            const success = await saveEntirePortfolio();
-            if(success) {
-                contentEl.value = '';
-                mediaEl.value = '';
-                populateAdminForms();
-            }
-        };
-
-        window.deleteAdminThought = async function(id) {
-            if(confirm('Are you sure you want to delete this thought?')) {
-                PORTFOLIO_DATA.thoughts = PORTFOLIO_DATA.thoughts.filter(t => t.id !== id);
-                await saveEntirePortfolio();
-                populateAdminForms();
-            }
-        };
-
-        window.toggleNewProjectForm = function() {
-            const form = document.getElementById('new-project-form');
-            form.classList.toggle('hidden');
-        };
-
-        window.saveNewProject = async function() {
-            const title = document.getElementById('proj-title').value;
-            if(!title) return alert("Title required");
-
-            const tagsStr = document.getElementById('proj-tags').value;
-            const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()) : [];
-
-            const newProj = {
-                id: 'proj-' + Date.now(),
-                title: title,
-                description: document.getElementById('proj-desc').value,
-                image: document.getElementById('proj-img').value,
-                link: document.getElementById('proj-link').value,
-                tags: tags
-            };
-
-            PORTFOLIO_DATA.projects.push(newProj);
-            const success = await saveEntirePortfolio();
-            
-            if(success) {
-                // clear form
-                document.getElementById('proj-title').value = '';
-                document.getElementById('proj-desc').value = '';
-                document.getElementById('proj-img').value = '';
-                document.getElementById('proj-link').value = '';
-                document.getElementById('proj-tags').value = '';
-                toggleNewProjectForm();
-                populateAdminForms();
-            }
-        };
-
-        window.deleteAdminProject = async function(id) {
-            if(confirm('Delete project?')) {
-                PORTFOLIO_DATA.projects = PORTFOLIO_DATA.projects.filter(p => p.id !== id);
-                await saveEntirePortfolio();
-                populateAdminForms();
-            }
-        }
-
-        window.switchTab = function(tabId) {
-            // Hide public tabs
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-
-            // Nav buttons styling
-            document.querySelectorAll('.nav-btn, .mobile-nav-btn').forEach(btn => {
-                if(btn.classList.contains('nav-btn')) {
-                    if(!btn.classList.contains('admin-only')) {
-                        btn.classList.remove('bg-gray-100', 'dark:bg-darkBorder', 'text-gray-900', 'dark:text-white');
-                    }
-                } else {
-                    btn.classList.remove('text-brand-600');
-                    btn.classList.add('text-gray-500');
-                }
-                
-                if (btn.getAttribute('onclick').includes(tabId)) {
-                    if(btn.classList.contains('nav-btn') && !btn.classList.contains('admin-only')) {
-                        btn.classList.add('bg-gray-100', 'dark:bg-darkBorder', 'text-gray-900', 'dark:text-white');
-                    } else if(btn.classList.contains('mobile-nav-btn')) {
-                        btn.classList.remove('text-gray-500');
-                        btn.classList.add('text-brand-600');
-                    }
-                }
-            });
-
-            if(tabId === 'admin' && isAdmin) {
-                populateAdminForms();
-            }
-        };
-
-        window.switchAdminView = function(viewId) {
-            document.querySelectorAll('.admin-view').forEach(v => {
-                v.classList.remove('block');
-                v.classList.add('hidden');
-            });
-            document.getElementById(`admin-view-${viewId}`).classList.remove('hidden');
-            document.getElementById(`admin-view-${viewId}`).classList.add('block');
-
-            document.querySelectorAll('.admin-menu-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-50', 'text-brand-700', 'dark:bg-brand-900/20', 'dark:text-brand-400');
-                btn.classList.add('text-gray-600', 'dark:text-gray-400');
-                if (btn.getAttribute('onclick').includes(viewId)) {
-                    btn.classList.remove('text-gray-600', 'dark:text-gray-400');
-                    btn.classList.add('bg-brand-50', 'text-brand-700', 'dark:bg-brand-900/20', 'dark:text-brand-400');
-                }
-            });
-        };
-
-        // Modal and Login flow
-        window.openLoginModal = function() {
-            if (isAdmin) { switchTab('admin'); return; }
-            const modal = document.getElementById('login-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            // trigger reflow for animation
-            void modal.offsetWidth;
-            
-            modal.classList.remove('opacity-0');
-            document.getElementById('login-modal-content').classList.remove('translate-y-4', 'scale-95');
-            document.getElementById('admin-password').focus();
+            document.getElementById('login-modal').classList.remove('hidden');
         };
 
         window.closeLoginModal = function() {
-            const modal = document.getElementById('login-modal');
-            modal.classList.add('opacity-0');
-            document.getElementById('login-modal-content').classList.add('translate-y-4', 'scale-95');
-            
-            setTimeout(() => {
-                modal.classList.remove('flex');
-                modal.classList.add('hidden');
-                document.getElementById('admin-password').value = '';
-                document.getElementById('login-error').classList.add('hidden');
-            }, 300);
+            document.getElementById('login-modal').classList.add('hidden');
         };
 
-        window.attemptLogin = function() {
-            const pass = document.getElementById('admin-password').value;
-            // Simulated secure check. In production, use Firebase Security Rules.
-            if (pass === 'admin') { 
+        window.verifyLogin = function() {
+            const pass = document.getElementById('login-password-input').value;
+            if(pass === correctPassword) {
                 isAdmin = true;
-                document.body.classList.add('admin-mode-active');
                 closeLoginModal();
+                document.getElementById('admin-tab-btn').classList.remove('hidden');
+                document.getElementById('admin-mobile-btn').classList.remove('hidden');
+                
+                // Populate Admin inputs
+                document.getElementById('admin-name').value = PORTFOLIO_DATA.profile.firstName;
+                document.getElementById('admin-initials').value = PORTFOLIO_DATA.profile.initials;
+                document.getElementById('admin-headline').value = PORTFOLIO_DATA.profile.headline;
+                document.getElementById('admin-github').value = PORTFOLIO_DATA.profile.github;
+                document.getElementById('admin-linkedin').value = PORTFOLIO_DATA.profile.linkedin;
+
                 switchTab('admin');
+                alert('Admin access granted successfully!');
             } else {
-                document.getElementById('login-error').classList.remove('hidden');
+                alert('Incorrect password!');
             }
         };
 
-        window.logoutAdmin = function() {
+        window.handleLogout = function() {
             isAdmin = false;
-            document.body.classList.remove('admin-mode-active');
+            document.getElementById('admin-tab-btn').classList.add('hidden');
+            document.getElementById('admin-mobile-btn').classList.add('hidden');
             switchTab('projects');
         };
 
-        // Theme Setup
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-        });
+        window.addProject = function() {
+            const title = document.getElementById('proj-title').value;
+            const desc = document.getElementById('proj-desc').value;
+            const tags = document.getElementById('proj-tags').value.split(',').map(t => t.trim());
+            const link = document.getElementById('proj-link').value;
+            if(!title) return alert('Please enter a project title');
 
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+            PORTFOLIO_DATA.projects.unshift({ title, description: desc, tags, link: link || '#' });
+            document.getElementById('proj-title').value = '';
+            document.getElementById('proj-desc').value = '';
+            document.getElementById('proj-tags').value = '';
+            document.getElementById('proj-link').value = '';
+            renderAll();
+            alert('Project added! Click "Save & Sync All Changes to Cloud" to persist it.');
+        };
+
+        window.addResearch = function() {
+            const title = document.getElementById('res-title').value;
+            const venue = document.getElementById('res-venue').value;
+            const date = document.getElementById('res-date').value;
+            const abstract = document.getElementById('res-abstract').value;
+            const link = document.getElementById('res-link').value;
+            if(!title) return alert('Please enter a paper title');
+
+            PORTFOLIO_DATA.research.unshift({ title, venue, date, abstract, link: link || '#' });
+            document.getElementById('res-title').value = '';
+            document.getElementById('res-venue').value = '';
+            document.getElementById('res-date').value = '';
+            document.getElementById('res-abstract').value = '';
+            document.getElementById('res-link').value = '';
+            renderAll();
+            alert('Research paper added! Click "Save & Sync All Changes to Cloud" to persist it.');
+        };
+
+        window.addThought = function() {
+            const title = document.getElementById('thought-title').value;
+            const content = document.getElementById('thought-content').value;
+            const media = document.getElementById('thought-media').value;
+            if(!title || !content) return alert('Please fill in both title and content.');
+
+            PORTFOLIO_DATA.thoughts.unshift({
+                id: Date.now(),
+                title,
+                content,
+                media,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                replies: []
+            });
+
+            document.getElementById('thought-title').value = '';
+            document.getElementById('thought-content').value = '';
+            document.getElementById('thought-media').value = '';
+            renderAll();
+            alert('Thought broadcasted! Click "Save & Sync All Changes to Cloud" to persist it.');
+        };
+
+        window.postReply = function(thoughtId) {
+            const input = document.getElementById(`reply-input-${thoughtId}`);
+            const text = input.value.trim();
+            if(!text) return;
+
+            const thought = PORTFOLIO_DATA.thoughts.find(t => t.id === thoughtId);
+            if(thought) {
+                if(!thought.replies) thought.replies = [];
+                thought.replies.push({ author: "Guest Visitor", text });
+                input.value = '';
+                renderAll();
+                saveAllChanges(); // Auto-save comments instantly
             }
-            
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-            switchTab('projects');
-            initAuth();
-        });
+        };
 
+        window.saveAllChanges = async function() {
+            // Collect profile changes
+            PORTFOLIO_DATA.profile.firstName = document.getElementById('admin-name').value;
+            PORTFOLIO_DATA.profile.initials = document.getElementById('admin-initials').value;
+            PORTFOLIO_DATA.profile.headline = document.getElementById('admin-headline').value;
+            PORTFOLIO_DATA.profile.github = document.getElementById('admin-github').value;
+            PORTFOLIO_DATA.profile.linkedin = document.getElementById('admin-linkedin').value;
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'data', 'appState');
+                await setDoc(docRef, { payload: PORTFOLIO_DATA });
+                alert('Success! All updates are securely saved to the cloud database.');
+            } catch (err) {
+                console.error("Cloud save failed:", err);
+                alert('Cloud sync note: Saved locally in session cache.');
+            }
+        };
+
+        // Initial Load Trigger
+        renderAll();
     </script>
 </body>
 </html>
