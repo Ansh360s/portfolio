@@ -360,11 +360,16 @@
         import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Environment Variables safely accessed via window object
-        const appId = window.__app_id || 'default-portfolio-app';
-        const firebaseConfig = window.__firebase_config ? JSON.parse(window.__firebase_config) : {};
-        const initialToken = window.__initial_auth_token;
-        
-        // Initialize Firebase
+const appId = 'my-portfolio';
+const firebaseConfig = {
+  apiKey: "AIzaSyCTBIjFS-8mz9-3sSSZExcnuUDQbilIMdI",
+  authDomain: "my-portfolio-db-e9b26.firebaseapp.com",
+  projectId: "my-portfolio-db-e9b26",
+  storageBucket: "my-portfolio-db-e9b26.firebasestorage.app",
+  messagingSenderId: "353504796003",
+  appId: "1:353504796003:web:3a0b5ad743d0a7d0230756"
+};
+                // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
