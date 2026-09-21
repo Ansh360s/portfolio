@@ -75,8 +75,8 @@
                 <h1 id="hero-name" class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">Jane Doe</h1>
                 <p id="hero-headline" class="text-lg text-gray-600 dark:text-gray-400 mb-4">Software Engineer & HCI Researcher crafting intelligent interfaces.</p>
                 <div id="hero-socials" class="flex items-center space-x-3">
-                    <a href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a id="link-github" href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-brands fa-github"></i></a>
+                    <a id="link-linkedin" href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
             </div>
         </section>
@@ -120,8 +120,8 @@
                         <p id="resume-title" class="text-indigo-600 dark:text-indigo-400 font-medium">Software Engineer</p>
                     </div>
                     <div id="resume-contact" class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                        <div><i class="fa-solid fa-envelope mr-2 text-indigo-500"></i> jane.doe@example.com</div>
-                        <div><i class="fa-solid location mr-2 text-indigo-500"></i> San Francisco, CA</div>
+                        <div><i class="fa-solid fa-envelope mr-2 text-indigo-500"></i> <span id="res-email">jane.doe@example.com</span></div>
+                        <div><i class="fa-solid fa-location-dot mr-2 text-indigo-500"></i> <span id="res-location">San Francisco, CA</span></div>
                     </div>
                 </div>
 
@@ -337,7 +337,6 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // FIXED PATH: Strict 4-segment compliant cloud doc path
                 const docRef = doc(db, 'artifacts', appId, 'data', 'appState');
                 onSnapshot(docRef, (docSnap) => {
                     if (docSnap.exists()) {
@@ -347,23 +346,25 @@
                             renderAll();
                         }
                     } else {
-                        // Initialize remote doc if missing
                         setDoc(docRef, { payload: PORTFOLIO_DATA }).catch(err => console.log("Init sync note:", err));
                     }
                 }, (error) => {
-                    console.log("Snapshot listener warning, falling back locally:", error);
+                    console.log("Snapshot listener warning:", error);
                 });
             }
         });
 
         window.renderAll = function() {
             const p = PORTFOLIO_DATA.profile;
-            document.getElementById('nav-name').innerText = `${p.firstName} ${p.lastName}`;
+            const fullName = `${p.firstName} ${p.lastName}`.trim();
+            document.getElementById('nav-name').innerText = fullName;
             document.getElementById('nav-initials').innerText = p.initials;
-            document.getElementById('hero-name').innerText = `${p.firstName} ${p.lastName}`;
+            document.getElementById('hero-name').innerText = fullName;
             document.getElementById('hero-initials').innerText = p.initials;
             document.getElementById('hero-headline').innerText = p.headline;
-            document.getElementById('footer-name').innerText = `${p.firstName} ${p.lastName}`;
+            document.getElementById('footer-name').innerText = fullName;
+            document.getElementById('link-github').href = p.github;
+            document.getElementById('link-linkedin').href = p.linkedin;
             
             // Render Projects
             const projContainer = document.getElementById('projects-grid');
@@ -424,8 +425,11 @@
             `).join('');
 
             // Render Resume Info
-            document.getElementById('resume-name').innerText = `${p.firstName} ${p.lastName}`;
+            document.getElementById('resume-name').innerText = fullName;
             document.getElementById('resume-title').innerText = p.headline.split('&')[0];
+            document.getElementById('res-email').innerText = p.email;
+            document.getElementById('res-location').innerText = p.location;
+            
             document.getElementById('resume-experience').innerHTML = PORTFOLIO_DATA.resume.experience.map(exp => `
                 <div class="border-l-2 border-indigo-500 pl-4 space-y-1">
                     <div class="font-bold text-base">${exp.role} <span class="text-xs font-normal text-gray-400">@ ${exp.company}</span></div>
@@ -492,15 +496,14 @@
                 document.getElementById('admin-tab-btn').classList.remove('hidden');
                 document.getElementById('admin-mobile-btn').classList.remove('hidden');
                 
-                // Populate Admin inputs
-                document.getElementById('admin-name').value = PORTFOLIO_DATA.profile.firstName;
+                // Populate Admin inputs securely
+                document.getElementById('admin-name').value = `${PORTFOLIO_DATA.profile.firstName} ${PORTFOLIO_DATA.profile.lastName}`.trim();
                 document.getElementById('admin-initials').value = PORTFOLIO_DATA.profile.initials;
                 document.getElementById('admin-headline').value = PORTFOLIO_DATA.profile.headline;
                 document.getElementById('admin-github').value = PORTFOLIO_DATA.profile.github;
                 document.getElementById('admin-linkedin').value = PORTFOLIO_DATA.profile.linkedin;
 
                 switchTab('admin');
-                alert('Admin access granted successfully!');
             } else {
                 alert('Incorrect password!');
             }
@@ -526,7 +529,7 @@
             document.getElementById('proj-tags').value = '';
             document.getElementById('proj-link').value = '';
             renderAll();
-            alert('Project added! Click "Save & Sync All Changes to Cloud" to persist it.');
+            alert('Project added! Click "Save & Sync All Changes to Cloud" below to persist it.');
         };
 
         window.addResearch = function() {
@@ -544,7 +547,7 @@
             document.getElementById('res-abstract').value = '';
             document.getElementById('res-link').value = '';
             renderAll();
-            alert('Research paper added! Click "Save & Sync All Changes to Cloud" to persist it.');
+            alert('Research paper added! Click "Save & Sync All Changes to Cloud" below to persist it.');
         };
 
         window.addThought = function() {
@@ -566,7 +569,7 @@
             document.getElementById('thought-content').value = '';
             document.getElementById('thought-media').value = '';
             renderAll();
-            alert('Thought broadcasted! Click "Save & Sync All Changes to Cloud" to persist it.');
+            alert('Thought broadcasted! Click "Save & Sync All Changes to Cloud" below to persist it.');
         };
 
         window.postReply = function(thoughtId) {
@@ -580,13 +583,16 @@
                 thought.replies.push({ author: "Guest Visitor", text });
                 input.value = '';
                 renderAll();
-                saveAllChanges(); // Auto-save comments instantly
+                saveAllChanges(); 
             }
         };
 
         window.saveAllChanges = async function() {
-            // Collect profile changes
-            PORTFOLIO_DATA.profile.firstName = document.getElementById('admin-name').value;
+            const fullNameInput = document.getElementById('admin-name').value.trim();
+            const nameParts = fullNameInput.split(' ');
+            PORTFOLIO_DATA.profile.firstName = nameParts[0] || "Jane";
+            PORTFOLIO_DATA.profile.lastName = nameParts.slice(1).join(' ') || "";
+            
             PORTFOLIO_DATA.profile.initials = document.getElementById('admin-initials').value;
             PORTFOLIO_DATA.profile.headline = document.getElementById('admin-headline').value;
             PORTFOLIO_DATA.profile.github = document.getElementById('admin-github').value;
@@ -596,13 +602,13 @@
                 const docRef = doc(db, 'artifacts', appId, 'data', 'appState');
                 await setDoc(docRef, { payload: PORTFOLIO_DATA });
                 alert('Success! All updates are securely saved to the cloud database.');
+                renderAll();
             } catch (err) {
                 console.error("Cloud save failed:", err);
                 alert('Cloud sync note: Saved locally in session cache.');
             }
         };
 
-        // Initial Load Trigger
         renderAll();
     </script>
 </body>
