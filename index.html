@@ -31,8 +31,10 @@
     <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-gray-200 dark:border-slate-800">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <span id="nav-initials" class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-500/20">JD</span>
-                <span id="nav-name" class="font-bold text-lg tracking-tight">Jane Doe</span>
+                <div id="nav-avatar-wrap" class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-500/20 overflow-hidden">
+                    <span id="nav-initials">JD</span>
+                </div>
+                <span id="nav-name" class="font-bold text-lg tracking-tight">Your Name</span>
             </div>
             
             <nav class="hidden md:flex items-center space-x-1">
@@ -66,17 +68,18 @@
         <!-- PROFILE HERO HEADER -->
         <section class="mb-12 flex flex-col md:flex-row items-start md:items-center gap-6 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm">
             <div id="profile-avatar-container" class="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-3xl sm:text-4xl shadow-lg shadow-indigo-600/20 overflow-hidden flex-shrink-0">
-                <span id="hero-initials">JD</span>
+                <span id="hero-initials">YN</span>
             </div>
             <div class="flex-grow">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 text-xs font-semibold mb-3 border border-emerald-200 dark:border-emerald-900/50">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Open to Work
                 </div>
-                <h1 id="hero-name" class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">Jane Doe</h1>
-                <p id="hero-headline" class="text-lg text-gray-600 dark:text-gray-400 mb-4">Software Engineer & HCI Researcher crafting intelligent interfaces.</p>
+                <h1 id="hero-name" class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">Your Name</h1>
+                <p id="hero-headline" class="text-lg text-gray-600 dark:text-gray-400 mb-4">Add your professional headline via the Admin Dashboard.</p>
                 <div id="hero-socials" class="flex items-center space-x-3">
                     <a id="link-github" href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-brands fa-github"></i></a>
                     <a id="link-linkedin" href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a id="link-instagram" href="#" target="_blank" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all"><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
         </section>
@@ -116,12 +119,12 @@
             <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm space-y-8">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-slate-800 pb-6">
                     <div>
-                        <h2 id="resume-name" class="text-2xl font-bold">Jane Doe</h2>
-                        <p id="resume-title" class="text-indigo-600 dark:text-indigo-400 font-medium">Software Engineer</p>
+                        <h2 id="resume-name" class="text-2xl font-bold">Your Name</h2>
+                        <p id="resume-title" class="text-indigo-600 dark:text-indigo-400 font-medium">Professional Title</p>
                     </div>
                     <div id="resume-contact" class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                        <div><i class="fa-solid fa-envelope mr-2 text-indigo-500"></i> <span id="res-email">jane.doe@example.com</span></div>
-                        <div><i class="fa-solid fa-location-dot mr-2 text-indigo-500"></i> <span id="res-location">San Francisco, CA</span></div>
+                        <div><i class="fa-solid fa-envelope mr-2 text-indigo-500"></i> <span id="res-email">email@example.com</span></div>
+                        <div><i class="fa-solid fa-location-dot mr-2 text-indigo-500"></i> <span id="res-location">City, Country</span></div>
                     </div>
                 </div>
 
@@ -154,7 +157,7 @@
                 <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-slate-800">
                     <div>
                         <h2 class="text-2xl font-bold">CMS Admin Dashboard</h2>
-                        <p class="text-sm text-gray-500">Manage your portfolio details, projects, research, and thoughts seamlessly.</p>
+                        <p class="text-sm text-gray-500">Manage your portfolio details, projects, research, thoughts, and resume seamlessly.</p>
                     </div>
                     <button onclick="handleLogout()" class="px-4 py-2 bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 text-sm font-medium rounded-lg hover:bg-red-100 transition-colors">Log Out</button>
                 </div>
@@ -163,15 +166,19 @@
                 <div class="space-y-8">
                     <!-- Profile Settings -->
                     <div class="space-y-4">
-                        <h3 class="text-lg font-semibold text-indigo-500"><i class="fa-solid fa-user-pen mr-2"></i> Profile Details</h3>
+                        <h3 class="text-lg font-semibold text-indigo-500"><i class="fa-solid fa-user-pen mr-2"></i> Profile & Social Links</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Full Name</label>
                                 <input type="text" id="admin-name" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Initials</label>
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Initials (Fallback Avatar)</label>
                                 <input type="text" id="admin-initials" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Profile Photo Image URL (Optional)</label>
+                                <input type="text" id="admin-avatar" placeholder="https://images.unsplash.com/... (Leave blank to use initials)" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                             </div>
                             <div class="sm:col-span-2">
                                 <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Headline Bio</label>
@@ -184,6 +191,18 @@
                             <div>
                                 <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">LinkedIn URL</label>
                                 <input type="text" id="admin-linkedin" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Instagram URL</label>
+                                <input type="text" id="admin-instagram" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Contact Email</label>
+                                <input type="text" id="admin-email" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Location</label>
+                                <input type="text" id="admin-location" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                             </div>
                         </div>
                     </div>
@@ -224,6 +243,43 @@
                         <button onclick="addThought()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-lg transition-colors shadow-sm"><i class="fa-solid fa-paper-plane mr-1"></i> Broadcast Thought</button>
                     </div>
 
+                    <!-- Resume Editor Form -->
+                    <div class="border-t border-gray-200 dark:border-slate-800 pt-6 space-y-6">
+                        <h3 class="text-lg font-semibold text-indigo-500"><i class="fa-solid fa-file-lines mr-2"></i> Resume Management</h3>
+                        
+                        <!-- Add Experience -->
+                        <div class="space-y-3 bg-gray-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                            <h4 class="text-sm font-bold">Add Experience Entry</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <input type="text" id="exp-role" placeholder="Role Title (e.g. Software Engineer)" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                                <input type="text" id="exp-company" placeholder="Company / Organization" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                                <input type="text" id="exp-period" placeholder="Period (e.g. 2024 - Present)" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                                <input type="text" id="exp-desc" placeholder="Short description of work" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <button onclick="addExperience()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium"><i class="fa-solid fa-plus mr-1"></i> Add Experience</button>
+                        </div>
+
+                        <!-- Add Education -->
+                        <div class="space-y-3 bg-gray-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                            <h4 class="text-sm font-bold">Add Education Entry</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <input type="text" id="edu-degree" placeholder="Degree (e.g. B.Tech in CS)" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                                <input type="text" id="edu-inst" placeholder="Institution Name" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                                <input type="text" id="edu-period" placeholder="Period (e.g. 2020 - 2024)" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <button onclick="addEducation()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium"><i class="fa-solid fa-plus mr-1"></i> Add Education</button>
+                        </div>
+
+                        <!-- Add Skill -->
+                        <div class="space-y-3 bg-gray-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                            <h4 class="text-sm font-bold">Add Core Skill</h4>
+                            <div class="flex gap-2">
+                                <input type="text" id="skill-input" placeholder="Skill Name (e.g. Python, React)" class="flex-grow bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                                <button onclick="addSkill()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium"><i class="fa-solid fa-plus mr-1"></i> Add Skill</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Global Save Button -->
                     <div class="border-t border-gray-200 dark:border-slate-800 pt-6 flex justify-end">
                         <button onclick="saveAllChanges()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition-all shadow-md flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Save & Sync All Changes to Cloud</button>
@@ -237,7 +293,7 @@
     <!-- Footer -->
     <footer class="mt-auto border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-sm text-gray-500">
         <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p>&copy; <span id="footer-year">2026</span> <span id="footer-name">Jane Doe</span>. All rights reserved.</p>
+            <p>&copy; <span id="footer-year">2026</span> <span id="footer-name">Your Name</span>. All rights reserved.</p>
             <button onclick="openLoginModal()" class="text-gray-400 hover:text-indigo-500 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-lock text-xs"></i> Admin CMS</button>
         </div>
     </footer>
@@ -264,7 +320,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Real Firebase Configuration
         const appId = 'my-portfolio';
         const firebaseConfig = {
             apiKey: "AIzaSyCTBIjFS-8mz9-3sSSZExcnuUDQbilIMdI",
@@ -282,57 +337,30 @@
         let isAdmin = false;
         const correctPassword = 'admin';
 
-        // Default Data Structure
+        // Clean Empty Data Structure (No Dummies)
         let PORTFOLIO_DATA = {
             profile: {
-                firstName: "Jane",
-                lastName: "Doe",
-                initials: "JD",
-                headline: "Software Engineer & HCI Researcher crafting intelligent interfaces.",
-                github: "https://github.com",
-                linkedin: "https://linkedin.com",
-                email: "jane.doe@example.com",
-                location: "San Francisco, CA"
+                firstName: "Your",
+                lastName: "Name",
+                initials: "YN",
+                avatar: "",
+                headline: "Add your professional headline via the Admin Dashboard.",
+                github: "",
+                linkedin: "",
+                instagram: "",
+                email: "email@example.com",
+                location: "City, Country"
             },
-            projects: [
-                {
-                    title: "Analytics Dashboard",
-                    description: "A real-time data visualization suite built with modern web components and optimized UI performance.",
-                    tags: ["React", "Tailwind", "Firebase"],
-                    link: "#"
-                }
-            ],
-            research: [
-                {
-                    title: "Human-Centered Design Patterns in Autonomous Agents",
-                    venue: "ACM CHI Conference",
-                    date: "2025",
-                    abstract: "Investigating ergonomic interaction models for complex multi-agent system handoffs.",
-                    link: "#"
-                }
-            ],
-            thoughts: [
-                {
-                    id: 1,
-                    title: "The Shift Toward Modular Interfaces",
-                    content: "Component architectures are evolving past traditional framework boundaries. Here is why lightweight client state is becoming paramount.",
-                    media: "",
-                    date: "May 12, 2026",
-                    replies: []
-                }
-            ],
+            projects: [],
+            research: [],
+            thoughts: [],
             resume: {
-                experience: [
-                    { role: "Senior Software Engineer", company: "TechCorp", period: "2023 - Present", description: "Leading frontend infrastructure and design systems." }
-                ],
-                education: [
-                    { degree: "B.S. in Computer Science", institution: "Stanford University", period: "2019 - 2023" }
-                ],
-                skills: ["JavaScript", "TypeScript", "React", "Node.js", "UI/UX Architecture"]
+                experience: [],
+                education: [],
+                skills: []
             }
         };
 
-        // Authenticate Anonymously with Firebase
         signInAnonymously(auth).catch((error) => console.error("Auth error:", error));
 
         onAuthStateChanged(auth, (user) => {
@@ -363,66 +391,98 @@
             document.getElementById('hero-initials').innerText = p.initials;
             document.getElementById('hero-headline').innerText = p.headline;
             document.getElementById('footer-name').innerText = fullName;
-            document.getElementById('link-github').href = p.github;
-            document.getElementById('link-linkedin').href = p.linkedin;
+            
+            // Avatar Handler (Supports Image URL or Initials)
+            const avatarContainer = document.getElementById('profile-avatar-container');
+            const navAvatarWrap = document.getElementById('nav-avatar-wrap');
+            if (p.avatar && p.avatar.trim() !== "") {
+                avatarContainer.innerHTML = `<img src="${p.avatar}" class="w-full h-full object-cover">`;
+                navAvatarWrap.innerHTML = `<img src="${p.avatar}" class="w-full h-full object-cover">`;
+            } else {
+                avatarContainer.innerHTML = `<span id="hero-initials">${p.initials || "YN"}</span>`;
+                navAvatarWrap.innerHTML = `<span id="nav-initials">${p.initials || "YN"}</span>`;
+            }
+
+            // Social Icons Visibility
+            const gh = document.getElementById('link-github');
+            const li = document.getElementById('link-linkedin');
+            const ig = document.getElementById('link-instagram');
+            
+            gh.style.display = p.github ? "flex" : "none";
+            gh.href = p.github || "#";
+            li.style.display = p.linkedin ? "flex" : "none";
+            li.href = p.linkedin || "#";
+            ig.style.display = p.instagram ? "flex" : "none";
+            ig.href = p.instagram || "#";
             
             // Render Projects
             const projContainer = document.getElementById('projects-grid');
-            projContainer.innerHTML = PORTFOLIO_DATA.projects.map(proj => `
-                <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold mb-2">${proj.title}</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">${proj.description}</p>
-                        <div class="flex flex-wrap gap-1.5 mb-4">
-                            ${proj.tags.map(t => `<span class="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 text-xs rounded-md font-medium">${t}</span>`).join('')}
+            if(PORTFOLIO_DATA.projects.length === 0) {
+                projContainer.innerHTML = `<p class="text-sm text-gray-400 col-span-2">No projects added yet. Log in to the Admin Dashboard to add your work.</p>`;
+            } else {
+                projContainer.innerHTML = PORTFOLIO_DATA.projects.map(proj => `
+                    <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">${proj.title}</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">${proj.description}</p>
+                            <div class="flex flex-wrap gap-1.5 mb-4">
+                                ${proj.tags.map(t => `<span class="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 text-xs rounded-md font-medium">${t}</span>`).join('')}
+                            </div>
                         </div>
+                        <a href="${proj.link}" target="_blank" class="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">View Project <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i></a>
                     </div>
-                    <a href="${proj.link}" target="_blank" class="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">View Project <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i></a>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
             // Render Research
             const resContainer = document.getElementById('research-list');
-            resContainer.innerHTML = PORTFOLIO_DATA.research.map(res => `
-                <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-3">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <h3 class="text-lg font-bold">${res.title}</h3>
-                        <span class="px-3 py-1 bg-gray-100 dark:bg-slate-800 text-xs font-semibold rounded-full w-fit">${res.venue} (${res.date})</span>
+            if(PORTFOLIO_DATA.research.length === 0) {
+                resContainer.innerHTML = `<p class="text-sm text-gray-400">No research papers published yet.</p>`;
+            } else {
+                resContainer.innerHTML = PORTFOLIO_DATA.research.map(res => `
+                    <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <h3 class="text-lg font-bold">${res.title}</h3>
+                            <span class="px-3 py-1 bg-gray-100 dark:bg-slate-800 text-xs font-semibold rounded-full w-fit">${res.venue} (${res.date})</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">${res.abstract}</p>
+                        <a href="${res.link}" target="_blank" class="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Read Paper <i class="fa-solid fa-file-pdf ml-1.5"></i></a>
                     </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${res.abstract}</p>
-                    <a href="${res.link}" target="_blank" class="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Read Paper <i class="fa-solid fa-file-pdf ml-1.5"></i></a>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
             // Render Thoughts
             const thoughtContainer = document.getElementById('thoughts-list');
-            thoughtContainer.innerHTML = PORTFOLIO_DATA.thoughts.map(th => `
-                <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
-                    <div class="flex items-center justify-between text-xs text-gray-400">
-                        <span><i class="fa-regular fa-calendar mr-1"></i> ${th.date}</span>
-                    </div>
-                    <h3 class="text-xl font-bold">${th.title}</h3>
-                    <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">${th.content}</p>
-                    ${th.media ? `<div class="rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800 max-h-96"><img src="${th.media}" class="w-full h-full object-cover"></div>` : ''}
-                    
-                    <!-- Comments / Replies section -->
-                    <div class="border-t border-gray-100 dark:border-slate-800 pt-4 mt-4 space-y-3">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Discussion (${th.replies ? th.replies.length : 0})</h4>
-                        <div class="space-y-2">
-                            ${(th.replies || []).map(r => `
-                                <div class="bg-gray-50 dark:bg-slate-800/50 p-3 rounded-xl text-xs space-y-1">
-                                    <div class="font-semibold text-indigo-500">${r.author}</div>
-                                    <div class="text-gray-600 dark:text-gray-300">${r.text}</div>
-                                </div>
-                            `).join('')}
+            if(PORTFOLIO_DATA.thoughts.length === 0) {
+                thoughtContainer.innerHTML = `<p class="text-sm text-gray-400">No thoughts shared yet.</p>`;
+            } else {
+                thoughtContainer.innerHTML = PORTFOLIO_DATA.thoughts.map(th => `
+                    <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> ${th.date}</span>
                         </div>
-                        <div class="flex gap-2 mt-2">
-                            <input type="text" id="reply-input-${th.id}" placeholder="Leave a public comment..." class="flex-grow bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-500">
-                            <button onclick="postReply(${th.id})" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium">Reply</button>
+                        <h3 class="text-xl font-bold">${th.title}</h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">${th.content}</p>
+                        ${th.media ? `<div class="rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800 max-h-96"><img src="${th.media}" class="w-full h-full object-cover"></div>` : ''}
+                        
+                        <div class="border-t border-gray-100 dark:border-slate-800 pt-4 mt-4 space-y-3">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Discussion (${th.replies ? th.replies.length : 0})</h4>
+                            <div class="space-y-2">
+                                ${(th.replies || []).map(r => `
+                                    <div class="bg-gray-50 dark:bg-slate-800/50 p-3 rounded-xl text-xs space-y-1">
+                                        <div class="font-semibold text-indigo-500">${r.author}</div>
+                                        <div class="text-gray-600 dark:text-gray-300">${r.text}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="flex gap-2 mt-2">
+                                <input type="text" id="reply-input-${th.id}" placeholder="Leave a public comment..." class="flex-grow bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-500">
+                                <button onclick="postReply(${th.id})" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium">Reply</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
             // Render Resume Info
             document.getElementById('resume-name').innerText = fullName;
@@ -430,24 +490,27 @@
             document.getElementById('res-email').innerText = p.email;
             document.getElementById('res-location').innerText = p.location;
             
-            document.getElementById('resume-experience').innerHTML = PORTFOLIO_DATA.resume.experience.map(exp => `
+            const expContainer = document.getElementById('resume-experience');
+            expContainer.innerHTML = PORTFOLIO_DATA.resume.experience.length ? PORTFOLIO_DATA.resume.experience.map(exp => `
                 <div class="border-l-2 border-indigo-500 pl-4 space-y-1">
                     <div class="font-bold text-base">${exp.role} <span class="text-xs font-normal text-gray-400">@ ${exp.company}</span></div>
                     <div class="text-xs text-indigo-500 font-medium">${exp.period}</div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">${exp.description}</p>
                 </div>
-            `).join('');
+            `).join('') : `<p class="text-sm text-gray-400">No experience added yet.</p>`;
 
-            document.getElementById('resume-education').innerHTML = PORTFOLIO_DATA.resume.education.map(edu => `
+            const eduContainer = document.getElementById('resume-education');
+            eduContainer.innerHTML = PORTFOLIO_DATA.resume.education.length ? PORTFOLIO_DATA.resume.education.map(edu => `
                 <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-4 space-y-1">
                     <div class="font-bold text-base">${edu.degree}</div>
                     <div class="text-xs text-indigo-500 font-medium">${edu.institution} (${edu.period})</div>
                 </div>
-            `).join('');
+            `).join('') : `<p class="text-sm text-gray-400">No education added yet.</p>`;
 
-            document.getElementById('resume-skills').innerHTML = PORTFOLIO_DATA.resume.skills.map(skill => `
+            const skillContainer = document.getElementById('resume-skills');
+            skillContainer.innerHTML = PORTFOLIO_DATA.resume.skills.length ? PORTFOLIO_DATA.resume.skills.map(skill => `
                 <span class="px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium">${skill}</span>
-            `).join('');
+            `).join('') : `<p class="text-sm text-gray-400">No skills added yet.</p>`;
         };
 
         window.switchTab = function(tabName) {
@@ -499,9 +562,13 @@
                 // Populate Admin inputs securely
                 document.getElementById('admin-name').value = `${PORTFOLIO_DATA.profile.firstName} ${PORTFOLIO_DATA.profile.lastName}`.trim();
                 document.getElementById('admin-initials').value = PORTFOLIO_DATA.profile.initials;
+                document.getElementById('admin-avatar').value = PORTFOLIO_DATA.profile.avatar || '';
                 document.getElementById('admin-headline').value = PORTFOLIO_DATA.profile.headline;
                 document.getElementById('admin-github').value = PORTFOLIO_DATA.profile.github;
                 document.getElementById('admin-linkedin').value = PORTFOLIO_DATA.profile.linkedin;
+                document.getElementById('admin-instagram').value = PORTFOLIO_DATA.profile.instagram || '';
+                document.getElementById('admin-email').value = PORTFOLIO_DATA.profile.email;
+                document.getElementById('admin-location').value = PORTFOLIO_DATA.profile.location;
 
                 switchTab('admin');
             } else {
@@ -519,7 +586,7 @@
         window.addProject = function() {
             const title = document.getElementById('proj-title').value;
             const desc = document.getElementById('proj-desc').value;
-            const tags = document.getElementById('proj-tags').value.split(',').map(t => t.trim());
+            const tags = document.getElementById('proj-tags').value.split(',').map(t => t.trim()).filter(Boolean);
             const link = document.getElementById('proj-link').value;
             if(!title) return alert('Please enter a project title');
 
@@ -572,6 +639,45 @@
             alert('Thought broadcasted! Click "Save & Sync All Changes to Cloud" below to persist it.');
         };
 
+        window.addExperience = function() {
+            const role = document.getElementById('exp-role').value;
+            const company = document.getElementById('exp-company').value;
+            const period = document.getElementById('exp-period').value;
+            const description = document.getElementById('exp-desc').value;
+            if(!role || !company) return alert('Please fill in role and company.');
+
+            PORTFOLIO_DATA.resume.experience.unshift({ role, company, period, description });
+            document.getElementById('exp-role').value = '';
+            document.getElementById('exp-company').value = '';
+            document.getElementById('exp-period').value = '';
+            document.getElementById('exp-desc').value = '';
+            renderAll();
+            alert('Experience added! Click "Save & Sync All Changes to Cloud" below.');
+        };
+
+        window.addEducation = function() {
+            const degree = document.getElementById('edu-degree').value;
+            const institution = document.getElementById('edu-inst').value;
+            const period = document.getElementById('edu-period').value;
+            if(!degree || !institution) return alert('Please fill in degree and institution.');
+
+            PORTFOLIO_DATA.resume.education.unshift({ degree, institution, period });
+            document.getElementById('edu-degree').value = '';
+            document.getElementById('edu-inst').value = '';
+            document.getElementById('edu-period').value = '';
+            renderAll();
+            alert('Education added! Click "Save & Sync All Changes to Cloud" below.');
+        };
+
+        window.addSkill = function() {
+            const skill = document.getElementById('skill-input').value.trim();
+            if(!skill) return;
+            PORTFOLIO_DATA.resume.skills.push(skill);
+            document.getElementById('skill-input').value = '';
+            renderAll();
+            alert('Skill added! Click "Save & Sync All Changes to Cloud" below.');
+        };
+
         window.postReply = function(thoughtId) {
             const input = document.getElementById(`reply-input-${thoughtId}`);
             const text = input.value.trim();
@@ -590,13 +696,17 @@
         window.saveAllChanges = async function() {
             const fullNameInput = document.getElementById('admin-name').value.trim();
             const nameParts = fullNameInput.split(' ');
-            PORTFOLIO_DATA.profile.firstName = nameParts[0] || "Jane";
-            PORTFOLIO_DATA.profile.lastName = nameParts.slice(1).join(' ') || "";
+            PORTFOLIO_DATA.profile.firstName = nameParts[0] || "Your";
+            PORTFOLIO_DATA.profile.lastName = nameParts.slice(1).join(' ') || "Name";
             
             PORTFOLIO_DATA.profile.initials = document.getElementById('admin-initials').value;
+            PORTFOLIO_DATA.profile.avatar = document.getElementById('admin-avatar').value;
             PORTFOLIO_DATA.profile.headline = document.getElementById('admin-headline').value;
             PORTFOLIO_DATA.profile.github = document.getElementById('admin-github').value;
             PORTFOLIO_DATA.profile.linkedin = document.getElementById('admin-linkedin').value;
+            PORTFOLIO_DATA.profile.instagram = document.getElementById('admin-instagram').value;
+            PORTFOLIO_DATA.profile.email = document.getElementById('admin-email').value;
+            PORTFOLIO_DATA.profile.location = document.getElementById('admin-location').value;
 
             try {
                 const docRef = doc(db, 'artifacts', appId, 'data', 'appState');
